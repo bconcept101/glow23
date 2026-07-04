@@ -52,6 +52,13 @@ body::before {
   mask-image: radial-gradient(circle at center, black, transparent 78%);
 }
 
+body.menu-open {
+  overflow: hidden;
+  height: 100vh;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
 button,
 input {
   font-family: inherit;
@@ -64,6 +71,24 @@ button {
 .page-shell {
   display: flex;
   min-height: 100vh;
+}
+
+/* MENU BACKDROP / SHIELD */
+
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 48;
+  background: rgba(0, 0, 0, 0.58);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.menu-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* FLOATING MENU */
@@ -106,8 +131,10 @@ button {
   box-shadow: 18px 0 60px rgba(0, 0, 0, 0.45);
   transform: translateX(-110%);
   transition: transform 0.3s ease;
-  z-index: 50;
+  z-index: 60;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
 }
 
 .side-menu.open {
@@ -484,62 +511,50 @@ button {
   pointer-events: none;
 }
 
-/* STACKED REVEAL CARDS */
+/* GLOW NUMBER REVEAL CARD */
 
 .reveal-stack {
   position: relative;
   z-index: 8;
-  width: min(420px, 92%);
+  width: min(520px, 94%);
   display: grid;
-  gap: 10px;
-  margin-bottom: 18px;
+  justify-items: center;
+  margin-bottom: 20px;
 }
 
 .winner-display {
-  padding: 15px;
+  padding: 18px;
   text-align: center;
-  border-radius: 22px;
+  border-radius: 24px;
   background:
-    linear-gradient(145deg, rgba(255, 214, 107, 0.22), rgba(255, 63, 164, 0.16));
-  border: 1px solid rgba(255, 214, 107, 0.38);
+    linear-gradient(145deg, rgba(255, 214, 107, 0.24), rgba(255, 63, 164, 0.16));
+  border: 1px solid rgba(255, 214, 107, 0.42);
   box-shadow: 0 20px 55px rgba(0, 0, 0, 0.35);
 }
 
 .glow-number-display {
   width: 100%;
-}
-
-.compact-bonus-display {
-  width: 78%;
-  justify-self: center;
-  padding: 10px 12px;
-  border-radius: 18px;
-}
-
-.bonus-display {
-  background:
-    linear-gradient(145deg, rgba(39, 199, 255, 0.2), rgba(123, 77, 255, 0.18));
-  border-color: rgba(39, 199, 255, 0.35);
+  padding: 22px;
 }
 
 .winner-display p {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   color: var(--text-soft);
-  font-size: 12px;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 1.5px;
   font-weight: 900;
 }
 
 .winner-ball {
-  width: 76px;
-  height: 76px;
+  width: 104px;
+  height: 104px;
   margin: 0 auto;
   display: grid;
   place-items: center;
   border-radius: 50%;
   color: #171006;
-  font-size: 32px;
+  font-size: 46px;
   font-weight: 1000;
   background:
     radial-gradient(circle at 30% 25%, #ffffff, #ffe78d 22%, #ff9f24 63%, #be4f00 100%);
@@ -549,12 +564,6 @@ button {
     0 18px 38px rgba(255, 138, 42, 0.35);
   transform: translateY(0);
   transition: transform 0.4s ease;
-}
-
-.compact-bonus-display .winner-ball {
-  width: 54px;
-  height: 54px;
-  font-size: 24px;
 }
 
 .bonus-ball {
@@ -639,7 +648,7 @@ button {
   z-index: 7;
 }
 
-/* MAIN CHAMBER BALLS — WHITE DOTS REMOVED */
+/* MAIN CHAMBER BALLS */
 
 .ball {
   position: absolute;
@@ -835,7 +844,6 @@ button {
 .bonus-chamber-ball-8 { left: 74px; top: 184px; animation-delay: -1.9s; }
 .bonus-chamber-ball-9 { left: 34px; top: 138px; animation-delay: -0.9s; }
 .bonus-chamber-ball-10 { left: 34px; top: 82px; animation-delay: -1.5s; }
-
 .bonus-chamber-ball-11 { left: 88px; top: 80px; animation-delay: -0.3s; }
 .bonus-chamber-ball-12 { left: 142px; top: 82px; animation-delay: -1.2s; }
 .bonus-chamber-ball-13 { left: 164px; top: 128px; animation-delay: -1.8s; }
@@ -863,8 +871,8 @@ button {
 
 .bonus-side-result-card p {
   margin: 0 0 14px;
-  color: var(--text-soft);
-  font-size: 12px;
+  color: var(--gold);
+  font-size: 13px;
   font-weight: 1000;
   letter-spacing: 1.4px;
   text-transform: uppercase;
@@ -1092,10 +1100,6 @@ button {
     font-size: 12px;
     padding: 10px 12px;
   }
-
-  .compact-bonus-display {
-    width: 88%;
-  }
 }
 
 @media (max-width: 520px) {
@@ -1120,15 +1124,9 @@ button {
   }
 
   .winner-ball {
-    width: 72px;
-    height: 72px;
-    font-size: 30px;
-  }
-
-  .compact-bonus-display .winner-ball {
-    width: 50px;
-    height: 50px;
-    font-size: 22px;
+    width: 86px;
+    height: 86px;
+    font-size: 38px;
   }
 
   .chamber-machine {
