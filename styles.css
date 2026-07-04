@@ -66,6 +66,31 @@ button {
   min-height: 100vh;
 }
 
+/* FLOATING MENU */
+
+.floating-menu-btn {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 45;
+  border: 0;
+  padding: 14px 18px;
+  border-radius: 999px;
+  color: #130a02;
+  font-weight: 1000;
+  background: linear-gradient(145deg, var(--gold), var(--orange));
+  box-shadow:
+    0 10px 0 rgba(119, 50, 0, 0.85),
+    0 24px 45px rgba(255, 138, 42, 0.28);
+}
+
+.floating-menu-btn:active {
+  transform: translateY(6px);
+  box-shadow:
+    0 4px 0 rgba(119, 50, 0, 0.85),
+    0 16px 32px rgba(255, 138, 42, 0.2);
+}
+
 /* SIDE MENU */
 
 .side-menu {
@@ -195,7 +220,7 @@ button {
   margin: 0 auto 28px;
   padding: 20px;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   gap: 18px;
   align-items: center;
   background: rgba(7, 9, 28, 0.65);
@@ -231,18 +256,44 @@ button {
   color: var(--text-soft);
 }
 
-.live-pill {
-  min-width: 145px;
+.top-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.top-nav a,
+.top-nav button {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 11px 13px;
+  border-radius: 999px;
+  color: var(--white);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 900;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.top-nav a:hover,
+.top-nav button:hover {
+  border-color: rgba(255, 214, 107, 0.45);
+  background: rgba(255, 214, 107, 0.12);
+}
+
+.header-status-pill {
+  min-width: 150px;
   text-align: center;
   padding: 12px 16px;
   border-radius: 999px;
   color: #07110b;
   background: linear-gradient(145deg, var(--green), var(--gold));
-  font-weight: 900;
+  font-weight: 1000;
   box-shadow: 0 0 28px rgba(93, 255, 156, 0.35);
 }
 
-.live-pill.closed {
+.header-status-pill.closed {
   color: var(--white);
   background: linear-gradient(145deg, var(--red), var(--pink));
 }
@@ -331,8 +382,9 @@ button {
   color: var(--red);
 }
 
-/* LEFT PANEL PUBLIC INFO */
+/* OFFICIAL RESULT CARD */
 
+.official-result-card,
 .draw-info-card {
   position: relative;
   margin-top: 24px;
@@ -344,6 +396,12 @@ button {
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
 }
 
+.official-result-card {
+  background:
+    radial-gradient(circle at top right, rgba(255, 214, 107, 0.18), transparent 35%),
+    linear-gradient(145deg, rgba(255, 63, 164, 0.14), rgba(255, 255, 255, 0.04));
+}
+
 .draw-info-label {
   margin: 0 0 14px;
   color: var(--green) !important;
@@ -351,6 +409,34 @@ button {
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 1.6px;
+}
+
+.official-result-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.official-result-main div {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.official-result-main span {
+  display: block;
+  color: var(--text-soft);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.official-result-main strong {
+  display: block;
+  color: var(--gold);
+  font-size: 42px;
+  line-height: 1;
 }
 
 .draw-info-row {
@@ -380,7 +466,7 @@ button {
 .chamber-stage {
   padding: 28px;
   position: relative;
-  min-height: 590px;
+  min-height: 650px;
   display: grid;
   align-content: start;
   justify-items: center;
@@ -398,18 +484,32 @@ button {
   pointer-events: none;
 }
 
-.winner-display {
+/* REVEAL CARDS */
+
+.reveal-card-grid {
   position: relative;
   z-index: 8;
-  width: min(320px, 90%);
-  padding: 16px;
+  width: min(620px, 96%);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
   margin-bottom: 18px;
+}
+
+.winner-display {
+  padding: 16px;
   text-align: center;
   border-radius: 24px;
   background:
     linear-gradient(145deg, rgba(255, 214, 107, 0.22), rgba(255, 63, 164, 0.16));
   border: 1px solid rgba(255, 214, 107, 0.38);
   box-shadow: 0 20px 55px rgba(0, 0, 0, 0.35);
+}
+
+.bonus-display {
+  background:
+    linear-gradient(145deg, rgba(39, 199, 255, 0.2), rgba(123, 77, 255, 0.18));
+  border-color: rgba(39, 199, 255, 0.35);
 }
 
 .winner-display p {
@@ -422,14 +522,14 @@ button {
 }
 
 .winner-ball {
-  width: 88px;
-  height: 88px;
+  width: 82px;
+  height: 82px;
   margin: 0 auto;
   display: grid;
   place-items: center;
   border-radius: 50%;
   color: #171006;
-  font-size: 36px;
+  font-size: 34px;
   font-weight: 1000;
   background:
     radial-gradient(circle at 30% 25%, #ffffff, #ffe78d 22%, #ff9f24 63%, #be4f00 100%);
@@ -441,6 +541,11 @@ button {
   transition: transform 0.4s ease;
 }
 
+.bonus-ball {
+  background:
+    radial-gradient(circle at 30% 25%, #ffffff, #bff4ff 22%, #27c7ff 63%, #075e9c 100%);
+}
+
 .winner-ball.waiting {
   color: rgba(255, 255, 255, 0.9);
   background:
@@ -450,6 +555,8 @@ button {
 .winner-ball.pop {
   animation: winnerPop 0.72s ease;
 }
+
+/* MAIN NUMBER CHAMBER */
 
 .chamber-machine {
   position: relative;
@@ -588,7 +695,7 @@ button {
   position: relative;
   z-index: 6;
   margin-top: 22px;
-  width: min(430px, 92%);
+  width: min(520px, 92%);
   padding: 18px 22px;
   text-align: center;
   border-radius: 22px;
@@ -617,6 +724,11 @@ button {
   max-width: 1220px;
   margin: 26px auto 0;
   padding: 28px;
+}
+
+.yesterday-section {
+  background:
+    linear-gradient(180deg, rgba(18, 24, 66, 0.88), rgba(7, 9, 28, 0.92));
 }
 
 .section-heading h2 {
@@ -730,6 +842,22 @@ button {
 
 /* MOBILE */
 
+@media (max-width: 1100px) {
+  .top-header {
+    grid-template-columns: auto 1fr;
+  }
+
+  .top-nav,
+  .header-status-pill {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .top-nav {
+    justify-content: flex-start;
+  }
+}
+
 @media (max-width: 980px) {
   .live-section {
     grid-template-columns: 1fr;
@@ -738,15 +866,6 @@ button {
   .results-grid,
   .rules-grid {
     grid-template-columns: 1fr;
-  }
-
-  .top-header {
-    grid-template-columns: auto 1fr;
-  }
-
-  .live-pill {
-    grid-column: 1 / -1;
-    justify-self: start;
   }
 
   .chamber-stage {
@@ -766,6 +885,22 @@ button {
 
   .draw-info-row {
     align-items: center;
+  }
+}
+
+@media (max-width: 620px) {
+  .reveal-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .official-result-main {
+    grid-template-columns: 1fr;
+  }
+
+  .top-nav a,
+  .top-nav button {
+    font-size: 12px;
+    padding: 10px 12px;
   }
 }
 
@@ -832,4 +967,11 @@ button {
   .ball-21 { left: 166px; top: 58px; }
   .ball-22 { left: 64px; top: 168px; }
   .ball-23 { left: 230px; top: 102px; }
+
+  .floating-menu-btn {
+    right: 14px;
+    bottom: 14px;
+    padding: 12px 15px;
+    font-size: 13px;
+  }
 }
