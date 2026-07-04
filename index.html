@@ -74,12 +74,12 @@
           <p id="currentRoundWindow">Checking today’s schedule...</p>
 
           <div class="countdown-box">
-            <span class="countdown-label">Next Phase In</span>
+            <span class="countdown-label">Next Update In</span>
             <strong id="countdownTimer">--:--:--</strong>
           </div>
 
           <div class="cutoff-box" id="cutoffBox">
-            <span>Star Placement Status</span>
+            <span>Entry Status</span>
             <strong id="cutoffStatus">Checking...</strong>
           </div>
         </div>
@@ -88,11 +88,11 @@
         <div class="chamber-stage">
 
           <div class="winner-display">
-            <p>Drawn Ball</p>
-            <div class="winner-ball" id="winnerBall">?</div>
+            <p>Glow Number Reveal</p>
+            <div class="winner-ball waiting" id="winnerBall">?</div>
           </div>
 
-          <div class="chamber-machine">
+          <div class="chamber-machine" id="chamberMachine">
             <div class="glass-shine"></div>
 
             <div class="ball ball-1">1</div>
@@ -110,14 +110,11 @@
             </div>
           </div>
 
-          <div class="draw-actions">
-            <button class="primary-btn" id="previewDrawBtn">
-              Preview Chamber Reveal
-            </button>
-            <p class="small-note">
-              Final production results should later be controlled from a secure backend.
-            </p>
+          <div class="draw-status" id="drawStatus">
+            <strong>Waiting for reveal</strong>
+            <span>The Glow Number will appear when the round opens.</span>
           </div>
+
         </div>
 
       </section>
@@ -154,7 +151,7 @@
       <!-- RULES -->
       <section class="rules-section" id="rules">
         <div class="section-heading">
-          <p class="section-label">Locked Setup</p>
+          <p class="section-label">Game Info</p>
           <h2>Glow 23 Rules</h2>
         </div>
 
@@ -175,8 +172,8 @@
           </article>
 
           <article>
-            <h3>Cutoff</h3>
-            <p>Star placements close before the round reveal window begins.</p>
+            <h3>Entry Cutoff</h3>
+            <p>Entries close before each round reveal window begins.</p>
           </article>
         </div>
       </section>
