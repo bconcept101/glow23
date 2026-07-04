@@ -68,8 +68,11 @@ const elements = {
   officialResultTime: document.getElementById("officialResultTime"),
 
   glowNumberBall: document.getElementById("glowNumberBall"),
-  glowBallBall: document.getElementById("glowBallBall"),
+  glowBallTopBall: document.getElementById("glowBallTopBall"),
   chamberMachine: document.getElementById("chamberMachine"),
+  bonusChamberMachine: document.getElementById("bonusChamberMachine"),
+  glowBallSideBall: document.getElementById("glowBallSideBall"),
+  bonusSideStatus: document.getElementById("bonusSideStatus"),
   drawStatus: document.getElementById("drawStatus"),
 
   todayResults: document.getElementById("todayResults"),
@@ -309,26 +312,10 @@ function clearRevealTimers() {
   revealState.completeTimer = null;
 }
 
-function resetRevealDisplay(numberTitle, message) {
-  clearRevealTimers();
-
-  revealState.key = null;
-  revealState.resultPosted = false;
-
-  elements.chamberMachine.classList.remove("is-drawing");
-
-  elements.glowNumberBall.classList.remove("pop");
-  elements.glowNumberBall.classList.add("waiting");
-  elements.glowNumberBall.textContent = "?";
-
-  elements.glowBallBall.classList.remove("pop");
-  elements.glowBallBall.classList.add("waiting");
-  elements.glowBallBall.textContent = "?";
-
-  elements.drawStatus.innerHTML = `
-    <strong>${numberTitle}</strong>
-    <span>${message}</span>
-  `;
+function resetBall(ballElement, symbol = "?") {
+  ballElement.classList.remove("pop");
+  ballElement.classList.add("waiting");
+  ballElement.textContent = symbol;
 }
 
 function popBall(ballElement, value) {
@@ -339,6 +326,27 @@ function popBall(ballElement, value) {
   window.requestAnimationFrame(() => {
     ballElement.classList.add("pop");
   });
+}
+
+function resetRevealDisplay(title, message) {
+  clearRevealTimers();
+
+  revealState.key = null;
+  revealState.resultPosted = false;
+
+  elements.chamberMachine.classList.remove("is-drawing");
+  elements.bonusChamberMachine.classList.remove("is-drawing");
+
+  resetBall(elements.glowNumberBall);
+  resetBall(elements.glowBallTopBall);
+  resetBall(elements.glowBallSideBall);
+
+  elements.bonusSideStatus.textContent = "Glow Ball chamber starts after the Glow Number reveal.";
+
+  elements.drawStatus.innerHTML = `
+    <strong>${title}</strong>
+    <span>${message}</span>
+  `;
 }
 
 function showOfficialResult(result) {
@@ -357,6 +365,9 @@ function clearOfficialResult(nextRound) {
 
 function revealFinalResult(result) {
   elements.chamberMachine.classList.remove("is-drawing");
+  elements.bonusChamberMachine.classList.remove("is-drawing");
+
+  elements.bonusSideStatus.textContent = `Glow Ball ${result.glowBall} revealed.`;
 
   elements.drawStatus.innerHTML = `
     <strong>${result.round} Result Posted</strong>
@@ -381,31 +392,37 @@ function startRevealSequence(round) {
   revealState.resultPosted = false;
 
   elements.chamberMachine.classList.add("is-drawing");
+  elements.bonusChamberMachine.classList.remove("is-drawing");
 
-  elements.glowNumberBall.classList.add("waiting");
-  elements.glowNumberBall.classList.remove("pop");
-  elements.glowNumberBall.textContent = "?";
+  resetBall(elements.glowNumberBall);
+  resetBall(elements.glowBallTopBall);
+  resetBall(elements.glowBallSideBall);
 
-  elements.glowBallBall.classList.add("waiting");
-  elements.glowBallBall.classList.remove("pop");
-  elements.glowBallBall.textContent = "?";
+  elements.bonusSideStatus.textContent = "Glow Ball chamber starts after the Glow Number reveal.";
 
   elements.drawStatus.innerHTML = `
     <strong>Drawing Glow Number</strong>
-    <span>The chamber is active. Glow Number reveal in progress.</span>
+    <span>The main chamber is active. Glow Number reveal in progress.</span>
   `;
 
   revealState.numberTimer = setTimeout(() => {
     popBall(elements.glowNumberBall, result.glowNumber);
+    elements.chamberMachine.classList.remove("is-drawing");
+    elements.bonusChamberMachine.classList.add("is-drawing");
+
+    elements.bonusSideStatus.textContent = "Glow Ball chamber is now active.";
 
     elements.drawStatus.innerHTML = `
       <strong>Drawing Glow Ball</strong>
-      <span>Glow Number ${result.glowNumber} is posted. Glow Ball reveal in progress.</span>
+      <span>Glow Number ${result.glowNumber} is posted. Glow Ball chamber is now running.</span>
     `;
   }, GAME_CONFIG.glowNumberRevealSeconds * 1000);
 
   revealState.ballTimer = setTimeout(() => {
-    popBall(elements.glowBallBall, result.glowBall);
+    elements.bonusChamberMachine.classList.remove("is-drawing");
+    popBall(elements.glowBallTopBall, result.glowBall);
+    popBall(elements.glowBallSideBall, result.glowBall);
+    elements.bonusSideStatus.textContent = `Glow Ball ${result.glowBall} revealed.`;
   }, GAME_CONFIG.glowBallRevealSeconds * 1000);
 
   revealState.completeTimer = setTimeout(() => {
@@ -424,9 +441,13 @@ function showPostedResult(round) {
     revealState.resultPosted = true;
 
     elements.chamberMachine.classList.remove("is-drawing");
+    elements.bonusChamberMachine.classList.remove("is-drawing");
 
     popBall(elements.glowNumberBall, result.glowNumber);
-    popBall(elements.glowBallBall, result.glowBall);
+    popBall(elements.glowBallTopBall, result.glowBall);
+    popBall(elements.glowBallSideBall, result.glowBall);
+
+    elements.bonusSideStatus.textContent = `Glow Ball ${result.glowBall} revealed.`;
 
     revealFinalResult(result);
   }
@@ -479,7 +500,7 @@ function updateLivePanel() {
   const detailRound = phase.nextRound || phase.round;
 
   elements.currentRoundName.textContent = phase.title;
-  elements.currentRoundWindow.textContent = `${phase.countdownLabel}`;
+  elements.currentRoundWindow.textContent = phase.countdownLabel;
   elements.currentDrawTime.textContent = detailRound.drawTimeLabel;
   elements.currentCutoffTime.textContent = detailRound.cutoffTimeLabel;
   elements.countdownTimer.textContent = getCountdownText(phase.targetDate);
