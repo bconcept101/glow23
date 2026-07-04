@@ -5,6 +5,7 @@ const GAME_CONFIG = {
   glowBallMin: 1,
   glowBallMax: 20,
   cutoffMinutesBeforeRound: 10,
+  revealAnimationSeconds: 8,
   rounds: [
     {
       id: 1,
@@ -38,6 +39,12 @@ const GAME_CONFIG = {
 
 let previousResults = [];
 
+let revealState = {
+  key: null,
+  timer: null,
+  complete: false
+};
+
 const elements = {
   sideMenu: document.getElementById("sideMenu"),
   openMenuBtn: document.getElementById("openMenuBtn"),
@@ -49,7 +56,8 @@ const elements = {
   cutoffBox: document.getElementById("cutoffBox"),
   cutoffStatus: document.getElementById("cutoffStatus"),
   winnerBall: document.getElementById("winnerBall"),
-  previewDrawBtn: document.getElementById("previewDrawBtn"),
+  chamberMachine: document.getElementById("chamberMachine"),
+  drawStatus: document.getElementById("drawStatus"),
   todayResults: document.getElementById("todayResults"),
   resultSearch: document.getElementById("resultSearch"),
   searchResults: document.getElementById("searchResults")
@@ -118,10 +126,11 @@ function seededNumber(seedText, min, max) {
   }
 
   const range = max - min + 1;
+
   return min + Math.abs(hash % range);
 }
 
-function getDemoResultForRound(round) {
+function getResultForRound(round) {
   const todayKey = formatDateKey(new Date());
 
   return {
@@ -155,10 +164,10 @@ function getCurrentPhase() {
         round,
         phase: "open",
         title: `${round.name} Upcoming`,
-        statusText: "Star Placement Open",
+        statusText: "Entries Open",
         pillText: "Open",
         targetDate: cutoffDate,
-        countdownLabel: "Placement cutoff starts in"
+        countdownLabel: "Entries close in"
       };
     }
 
@@ -166,11 +175,11 @@ function getCurrentPhase() {
       return {
         round,
         phase: "cutoff",
-        title: `${round.name} Cutoff`,
-        statusText: "Closed For Reveal",
-        pillText: "Cutoff",
+        title: `${round.name} Ready`,
+        statusText: "Entries Closed",
+        pillText: "Closed",
         targetDate: startDate,
-        countdownLabel: "Reveal window starts in"
+        countdownLabel: "Reveal starts in"
       };
     }
 
@@ -179,10 +188,10 @@ function getCurrentPhase() {
         round,
         phase: "live",
         title: `${round.name} Live`,
-        statusText: "Closed / Round Live",
+        statusText: "Round Live",
         pillText: "Live",
         targetDate: endDate,
-        countdownLabel: "Round window ends in"
+        countdownLabel: "Round ends in"
       };
     }
   }
@@ -203,8 +212,22 @@ function getCurrentPhase() {
     statusText: "Closed Until Tomorrow",
     pillText: "Complete",
     targetDate: tomorrow,
-    countdownLabel: "Tomorrow’s first cutoff starts in"
+    countdownLabel: "Next day opens in"
   };
+}
+
+function getLatestRevealedRound() {
+  const now = new Date();
+
+  const revealedRounds = GAME_CONFIG.rounds.filter((round) => {
+    return now >= createRoundDate(round, "start");
+  });
+
+  if (revealedRounds.length === 0) {
+    return null;
+  }
+
+  return revealedRounds[revealedRounds.length - 1];
 }
 
 function updateLivePanel() {
@@ -225,6 +248,117 @@ function updateLivePanel() {
   elements.liveStatusPill.classList.toggle("closed", isClosed);
 }
 
+function clearRevealTimer() {
+  if (revealState.timer) {
+    clearTimeout(revealState.timer);
+  }
+
+  revealState.timer = null;
+}
+
+function setWaitingDisplay(title, message) {
+  clearRevealTimer();
+
+  revealState.key = null;
+  revealState.complete = false;
+
+  elements.chamberMachine.classList.remove("is-drawing");
+  elements.winnerBall.classList.remove("pop");
+  elements.winnerBall.classList.add("waiting");
+  elements.winnerBall.textContent = "?";
+
+  elements.drawStatus.innerHTML = `
+    <strong>${title}</strong>
+    <span>${message}</span>
+  `;
+}
+
+function revealResult(result) {
+  elements.chamberMachine.classList.remove("is-drawing");
+  elements.winnerBall.classList.remove("waiting");
+  elements.winnerBall.classList.remove("pop");
+  elements.winnerBall.textContent = result.glowNumber;
+
+  window.requestAnimationFrame(() => {
+    elements.winnerBall.classList.add("pop");
+  });
+
+  elements.drawStatus.innerHTML = `
+    <strong>${result.round} Result</strong>
+    <span>Glow Number ${result.glowNumber} • Glow Ball ${result.glowBall} • ${result.timestamp}</span>
+  `;
+
+  revealState.complete = true;
+}
+
+function startRevealSequence(round) {
+  const result = getResultForRound(round);
+  const key = `${result.date}-${round.id}`;
+
+  if (revealState.key === key) {
+    return;
+  }
+
+  clearRevealTimer();
+
+  revealState.key = key;
+  revealState.complete = false;
+
+  elements.winnerBall.classList.add("waiting");
+  elements.winnerBall.classList.remove("pop");
+  elements.winnerBall.textContent = "?";
+
+  elements.chamberMachine.classList.add("is-drawing");
+
+  elements.drawStatus.innerHTML = `
+    <strong>Drawing Now</strong>
+    <span>Balls are moving. Glow Number reveal in progress.</span>
+  `;
+
+  revealState.timer = setTimeout(() => {
+    revealResult(result);
+  }, GAME_CONFIG.revealAnimationSeconds * 1000);
+}
+
+function updateRevealDisplay() {
+  const phase = getCurrentPhase();
+
+  if (phase.phase === "open") {
+    setWaitingDisplay(
+      "Waiting for reveal",
+      "The Glow Number will appear when the round opens."
+    );
+    return;
+  }
+
+  if (phase.phase === "cutoff") {
+    setWaitingDisplay(
+      "Entries closed",
+      "The chamber is preparing for the next reveal."
+    );
+    return;
+  }
+
+  if (phase.phase === "live") {
+    startRevealSequence(phase.round);
+    return;
+  }
+
+  if (phase.phase === "finished") {
+    const latestRound = getLatestRevealedRound();
+
+    if (!latestRound) {
+      setWaitingDisplay(
+        "Waiting for first round",
+        "The first Glow Number will appear after Round 1 opens."
+      );
+      return;
+    }
+
+    startRevealSequence(latestRound);
+  }
+}
+
 function buildTodayResults() {
   const now = new Date();
 
@@ -242,7 +376,7 @@ function buildTodayResults() {
       `;
     }
 
-    const result = getDemoResultForRound(round);
+    const result = getResultForRound(round);
 
     return `
       <article class="result-card">
@@ -277,7 +411,7 @@ async function loadPreviousResults() {
 function getAvailableTodayResults() {
   return GAME_CONFIG.rounds
     .filter((round) => new Date() >= createRoundDate(round, "start"))
-    .map(getDemoResultForRound);
+    .map(getResultForRound);
 }
 
 function renderSearchResults(searchTerm = "") {
@@ -317,21 +451,6 @@ function renderSearchResults(searchTerm = "") {
     .join("");
 }
 
-function previewChamberReveal() {
-  const randomGlowNumber =
-    Math.floor(
-      Math.random() *
-        (GAME_CONFIG.glowNumberMax - GAME_CONFIG.glowNumberMin + 1)
-    ) + GAME_CONFIG.glowNumberMin;
-
-  elements.winnerBall.textContent = randomGlowNumber;
-  elements.winnerBall.classList.remove("pop");
-
-  window.requestAnimationFrame(() => {
-    elements.winnerBall.classList.add("pop");
-  });
-}
-
 function setupSideMenu() {
   elements.openMenuBtn.addEventListener("click", () => {
     elements.sideMenu.classList.add("open");
@@ -358,10 +477,12 @@ function setupSearch() {
 
 function startClock() {
   updateLivePanel();
+  updateRevealDisplay();
   buildTodayResults();
 
   setInterval(() => {
     updateLivePanel();
+    updateRevealDisplay();
     buildTodayResults();
     renderSearchResults(elements.resultSearch.value);
   }, 1000);
@@ -373,9 +494,6 @@ async function initGlow23() {
   await loadPreviousResults();
 
   setupSearch();
-
-  elements.previewDrawBtn.addEventListener("click", previewChamberReveal);
-
   startClock();
 }
 
