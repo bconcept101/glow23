@@ -1,0 +1,12 @@
+**/.git
+**/.git/**
+.git
+.git/**
+
+README.md
+PRODUCTION-CHECKLIST.md
+DESIGN-NOTES.md
+wrangler.toml
+.assetsignore
+
+*.md
