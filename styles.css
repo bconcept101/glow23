@@ -331,6 +331,50 @@ button {
   color: var(--red);
 }
 
+/* LEFT PANEL PUBLIC INFO */
+
+.draw-info-card {
+  position: relative;
+  margin-top: 24px;
+  padding: 20px;
+  border-radius: 22px;
+  background:
+    linear-gradient(145deg, rgba(255, 214, 107, 0.12), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(255, 214, 107, 0.22);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
+}
+
+.draw-info-label {
+  margin: 0 0 14px;
+  color: var(--green) !important;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+}
+
+.draw-info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.draw-info-row:first-of-type {
+  border-top: 0;
+}
+
+.draw-info-row span {
+  color: var(--text-soft);
+  font-size: 14px;
+}
+
+.draw-info-row strong {
+  color: var(--gold);
+  text-align: right;
+}
+
 /* CHAMBER */
 
 .chamber-stage {
@@ -378,14 +422,14 @@ button {
 }
 
 .winner-ball {
-  width: 92px;
-  height: 92px;
+  width: 88px;
+  height: 88px;
   margin: 0 auto;
   display: grid;
   place-items: center;
   border-radius: 50%;
   color: #171006;
-  font-size: 38px;
+  font-size: 36px;
   font-weight: 1000;
   background:
     radial-gradient(circle at 30% 25%, #ffffff, #ffe78d 22%, #ff9f24 63%, #be4f00 100%);
@@ -414,8 +458,8 @@ button {
   height: 430px;
   border-radius: 50%;
   background:
-    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.45), transparent 12%),
-    radial-gradient(circle at center, rgba(39, 199, 255, 0.25), rgba(123, 77, 255, 0.18) 44%, rgba(2, 3, 10, 0.8) 76%);
+    radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.42), transparent 12%),
+    radial-gradient(circle at center, rgba(39, 199, 255, 0.22), rgba(123, 77, 255, 0.2) 44%, rgba(2, 3, 10, 0.84) 76%);
   border: 12px solid rgba(255, 214, 107, 0.75);
   box-shadow:
     inset 0 0 50px rgba(255, 255, 255, 0.18),
@@ -448,7 +492,7 @@ button {
     inset 0 0 22px rgba(255, 255, 255, 0.08),
     0 0 18px rgba(255, 214, 107, 0.08);
   pointer-events: none;
-  z-index: 5;
+  z-index: 6;
 }
 
 .chamber-machine.is-drawing {
@@ -472,132 +516,71 @@ button {
   z-index: 7;
 }
 
-.machine-core {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 148px;
-  height: 148px;
-  display: grid;
-  place-items: center;
-  transform: translate(-50%, -50%);
-  border-radius: 38px;
-  background:
-    linear-gradient(145deg, #ff3fa4, #7b4dff 45%, #27c7ff);
-  border: 4px solid rgba(255, 255, 255, 0.2);
-  box-shadow:
-    inset 0 0 24px rgba(255, 255, 255, 0.25),
-    0 18px 45px rgba(0, 0, 0, 0.38);
-  z-index: 4;
-  text-align: center;
-}
-
-.chamber-machine.is-drawing .machine-core {
-  animation: corePulse 0.55s infinite alternate;
-}
-
-.machine-core span {
-  display: block;
-  font-size: 19px;
-  font-weight: 900;
-  letter-spacing: 2px;
-}
-
-.machine-core strong {
-  display: block;
-  font-size: 54px;
-  line-height: 0.85;
-  color: var(--gold);
-  text-shadow: 0 4px 0 rgba(0, 0, 0, 0.24);
-}
+/* 23 SMALL CHAMBER BALLS */
 
 .ball {
   position: absolute;
-  width: 66px;
-  height: 66px;
+  width: 42px;
+  height: 42px;
   display: grid;
   place-items: center;
   border-radius: 50%;
   color: #120b05;
   font-weight: 1000;
-  font-size: 22px;
+  font-size: 16px;
   background:
-    radial-gradient(circle at 28% 22%, #ffffff, #ffe477 18%, #ff6a2a 58%, #b82811 100%);
+    radial-gradient(circle at 28% 22%, #ffffff, hsl(var(--ball-hue), 95%, 78%) 18%, hsl(var(--ball-hue), 88%, 56%) 58%, hsl(var(--ball-hue), 80%, 32%) 100%);
   box-shadow:
-    inset -8px -10px 14px rgba(71, 22, 0, 0.36),
-    inset 6px 7px 12px rgba(255, 255, 255, 0.52),
-    0 16px 30px rgba(0, 0, 0, 0.35);
+    inset -5px -7px 10px rgba(71, 22, 0, 0.32),
+    inset 4px 5px 9px rgba(255, 255, 255, 0.48),
+    0 12px 22px rgba(0, 0, 0, 0.3);
   z-index: 2;
   animation: floatBall 4s infinite ease-in-out alternate;
 }
 
+.ball::after {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  right: 8px;
+  top: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.75);
+}
+
 .chamber-machine.is-drawing .ball {
-  animation-duration: 0.55s !important;
+  animation-duration: 0.45s !important;
   animation-timing-function: linear;
-  filter: saturate(1.25) brightness(1.08);
+  filter: saturate(1.3) brightness(1.08);
 }
 
-.ball-1 {
-  left: 54px;
-  top: 66px;
-  animation-duration: 3.6s;
-}
+/* Ball layout inside chamber */
 
-.ball-2 {
-  right: 70px;
-  top: 78px;
-  background:
-    radial-gradient(circle at 28% 22%, #ffffff, #8cffdf 18%, #27c7ff 58%, #065d9b 100%);
-  animation-duration: 4.1s;
-}
+.ball-1 { left: 106px; top: 56px; animation-duration: 3.6s; animation-delay: -0.2s; }
+.ball-2 { left: 174px; top: 44px; animation-duration: 4.1s; animation-delay: -0.8s; }
+.ball-3 { left: 244px; top: 58px; animation-duration: 3.8s; animation-delay: -1.4s; }
+.ball-4 { left: 304px; top: 98px; animation-duration: 4.4s; animation-delay: -0.6s; }
+.ball-5 { left: 334px; top: 164px; animation-duration: 3.3s; animation-delay: -1.1s; }
+.ball-6 { left: 316px; top: 232px; animation-duration: 4.7s; animation-delay: -1.7s; }
+.ball-7 { left: 268px; top: 290px; animation-duration: 3.9s; animation-delay: -0.4s; }
+.ball-8 { left: 198px; top: 318px; animation-duration: 4.3s; animation-delay: -1.9s; }
+.ball-9 { left: 124px; top: 302px; animation-duration: 3.5s; animation-delay: -0.9s; }
+.ball-10 { left: 66px; top: 254px; animation-duration: 4.8s; animation-delay: -1.5s; }
+.ball-11 { left: 48px; top: 180px; animation-duration: 3.7s; animation-delay: -0.3s; }
+.ball-12 { left: 70px; top: 108px; animation-duration: 4.2s; animation-delay: -1.2s; }
 
-.ball-3 {
-  left: 84px;
-  bottom: 104px;
-  background:
-    radial-gradient(circle at 28% 22%, #ffffff, #ffb3de 18%, #ff3fa4 58%, #8d0d4f 100%);
-  animation-duration: 3.8s;
-}
-
-.ball-4 {
-  right: 94px;
-  bottom: 84px;
-  background:
-    radial-gradient(circle at 28% 22%, #ffffff, #d5c6ff 18%, #7b4dff 58%, #392098 100%);
-  animation-duration: 4.4s;
-}
-
-.ball-5 {
-  left: 174px;
-  top: 42px;
-  background:
-    radial-gradient(circle at 28% 22%, #ffffff, #d7ffb1 18%, #5dff9c 58%, #138340 100%);
-  animation-duration: 4s;
-}
-
-.ball-6 {
-  right: 44px;
-  bottom: 172px;
-  background:
-    radial-gradient(circle at 28% 22%, #ffffff, #fff0a4 18%, #ffd66b 58%, #a86a00 100%);
-  animation-duration: 3.3s;
-}
-
-.ball-7 {
-  left: 40px;
-  bottom: 178px;
-  background:
-    radial-gradient(circle at 28% 22%, #ffffff, #ffc6c6 18%, #ff4a5f 58%, #9c0d1e 100%);
-  animation-duration: 4.7s;
-}
-
-.ball-8 {
-  right: 168px;
-  bottom: 42px;
-  background:
-    radial-gradient(circle at 28% 22%, #ffffff, #c5f1ff 18%, #27c7ff 58%, #064c83 100%);
-  animation-duration: 3.9s;
-}
+.ball-13 { left: 144px; top: 122px; animation-duration: 3.4s; animation-delay: -1.8s; }
+.ball-14 { left: 218px; top: 120px; animation-duration: 4.6s; animation-delay: -0.7s; }
+.ball-15 { left: 264px; top: 174px; animation-duration: 3.9s; animation-delay: -1.3s; }
+.ball-16 { left: 244px; top: 238px; animation-duration: 4.5s; animation-delay: -0.1s; }
+.ball-17 { left: 178px; top: 262px; animation-duration: 3.6s; animation-delay: -1.6s; }
+.ball-18 { left: 116px; top: 226px; animation-duration: 4.1s; animation-delay: -0.5s; }
+.ball-19 { left: 114px; top: 156px; animation-duration: 3.8s; animation-delay: -2s; }
+.ball-20 { left: 184px; top: 184px; animation-duration: 4.7s; animation-delay: -0.9s; }
+.ball-21 { left: 208px; top: 72px; animation-duration: 3.5s; animation-delay: -1.1s; }
+.ball-22 { left: 82px; top: 210px; animation-duration: 4.4s; animation-delay: -0.6s; }
+.ball-23 { left: 286px; top: 126px; animation-duration: 3.9s; animation-delay: -1.4s; }
 
 /* PUBLIC DRAW STATUS */
 
@@ -715,19 +698,19 @@ button {
   }
 
   25% {
-    transform: translate3d(38px, -28px, 0) rotate(95deg);
+    transform: translate3d(18px, -16px, 0) rotate(95deg);
   }
 
   50% {
-    transform: translate3d(-24px, 34px, 0) rotate(190deg);
+    transform: translate3d(-14px, 18px, 0) rotate(190deg);
   }
 
   75% {
-    transform: translate3d(28px, 22px, 0) rotate(285deg);
+    transform: translate3d(16px, 12px, 0) rotate(285deg);
   }
 
   100% {
-    transform: translate3d(-18px, -16px, 0) rotate(360deg);
+    transform: translate3d(-12px, -10px, 0) rotate(360deg);
   }
 }
 
@@ -742,16 +725,6 @@ button {
 
   100% {
     transform: scale(1) translateY(0);
-  }
-}
-
-@keyframes corePulse {
-  from {
-    transform: translate(-50%, -50%) scale(1);
-  }
-
-  to {
-    transform: translate(-50%, -50%) scale(1.05);
   }
 }
 
@@ -781,23 +754,18 @@ button {
   }
 
   .chamber-machine {
-    width: min(400px, 88vw);
-    height: min(400px, 88vw);
+    width: min(390px, 88vw);
+    height: min(390px, 88vw);
   }
 
   .ball {
-    width: 58px;
-    height: 58px;
-    font-size: 20px;
+    width: 38px;
+    height: 38px;
+    font-size: 14px;
   }
 
-  .machine-core {
-    width: 125px;
-    height: 125px;
-  }
-
-  .machine-core strong {
-    font-size: 44px;
+  .draw-info-row {
+    align-items: center;
   }
 }
 
@@ -829,46 +797,39 @@ button {
   }
 
   .chamber-machine {
+    width: min(340px, 86vw);
+    height: min(340px, 86vw);
     border-width: 8px;
   }
 
-  .ball-1 {
-    left: 42px;
-    top: 62px;
+  .ball {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
   }
 
-  .ball-2 {
-    right: 56px;
-    top: 78px;
-  }
+  .ball-1 { left: 82px; top: 44px; }
+  .ball-2 { left: 138px; top: 34px; }
+  .ball-3 { left: 194px; top: 46px; }
+  .ball-4 { left: 242px; top: 80px; }
+  .ball-5 { left: 268px; top: 132px; }
+  .ball-6 { left: 252px; top: 184px; }
+  .ball-7 { left: 214px; top: 232px; }
+  .ball-8 { left: 158px; top: 254px; }
+  .ball-9 { left: 98px; top: 242px; }
+  .ball-10 { left: 52px; top: 202px; }
+  .ball-11 { left: 38px; top: 146px; }
+  .ball-12 { left: 56px; top: 88px; }
 
-  .ball-3 {
-    left: 64px;
-    bottom: 92px;
-  }
-
-  .ball-4 {
-    right: 72px;
-    bottom: 80px;
-  }
-
-  .ball-5 {
-    left: 145px;
-    top: 36px;
-  }
-
-  .ball-6 {
-    right: 38px;
-    bottom: 150px;
-  }
-
-  .ball-7 {
-    left: 34px;
-    bottom: 155px;
-  }
-
-  .ball-8 {
-    right: 140px;
-    bottom: 36px;
-  }
+  .ball-13 { left: 114px; top: 100px; }
+  .ball-14 { left: 174px; top: 98px; }
+  .ball-15 { left: 210px; top: 142px; }
+  .ball-16 { left: 194px; top: 190px; }
+  .ball-17 { left: 140px; top: 210px; }
+  .ball-18 { left: 92px; top: 180px; }
+  .ball-19 { left: 90px; top: 124px; }
+  .ball-20 { left: 146px; top: 148px; }
+  .ball-21 { left: 166px; top: 58px; }
+  .ball-22 { left: 64px; top: 168px; }
+  .ball-23 { left: 230px; top: 102px; }
 }
