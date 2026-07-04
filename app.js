@@ -48,6 +48,7 @@ let revealState = {
 
 const elements = {
   sideMenu: document.getElementById("sideMenu"),
+  menuBackdrop: document.getElementById("menuBackdrop"),
   openMenuBtn: document.getElementById("openMenuBtn"),
   floatingMenuBtn: document.getElementById("floatingMenuBtn"),
   openResultsBtn: document.getElementById("openResultsBtn"),
@@ -68,7 +69,6 @@ const elements = {
   officialResultTime: document.getElementById("officialResultTime"),
 
   glowNumberBall: document.getElementById("glowNumberBall"),
-  glowBallTopBall: document.getElementById("glowBallTopBall"),
   chamberMachine: document.getElementById("chamberMachine"),
   bonusChamberMachine: document.getElementById("bonusChamberMachine"),
   glowBallSideBall: document.getElementById("glowBallSideBall"),
@@ -338,7 +338,6 @@ function resetRevealDisplay(title, message) {
   elements.bonusChamberMachine.classList.remove("is-drawing");
 
   resetBall(elements.glowNumberBall);
-  resetBall(elements.glowBallTopBall);
   resetBall(elements.glowBallSideBall);
 
   elements.bonusSideStatus.textContent = "Glow Ball chamber starts after the Glow Number reveal.";
@@ -395,7 +394,6 @@ function startRevealSequence(round) {
   elements.bonusChamberMachine.classList.remove("is-drawing");
 
   resetBall(elements.glowNumberBall);
-  resetBall(elements.glowBallTopBall);
   resetBall(elements.glowBallSideBall);
 
   elements.bonusSideStatus.textContent = "Glow Ball chamber starts after the Glow Number reveal.";
@@ -420,7 +418,6 @@ function startRevealSequence(round) {
 
   revealState.ballTimer = setTimeout(() => {
     elements.bonusChamberMachine.classList.remove("is-drawing");
-    popBall(elements.glowBallTopBall, result.glowBall);
     popBall(elements.glowBallSideBall, result.glowBall);
     elements.bonusSideStatus.textContent = `Glow Ball ${result.glowBall} revealed.`;
   }, GAME_CONFIG.glowBallRevealSeconds * 1000);
@@ -444,7 +441,6 @@ function showPostedResult(round) {
     elements.bonusChamberMachine.classList.remove("is-drawing");
 
     popBall(elements.glowNumberBall, result.glowNumber);
-    popBall(elements.glowBallTopBall, result.glowBall);
     popBall(elements.glowBallSideBall, result.glowBall);
 
     elements.bonusSideStatus.textContent = `Glow Ball ${result.glowBall} revealed.`;
@@ -667,10 +663,14 @@ function renderSearchResults(searchTerm = "") {
 
 function openSideMenu() {
   elements.sideMenu.classList.add("open");
+  elements.menuBackdrop.classList.add("open");
+  document.body.classList.add("menu-open");
 }
 
 function closeSideMenu() {
   elements.sideMenu.classList.remove("open");
+  elements.menuBackdrop.classList.remove("open");
+  document.body.classList.remove("menu-open");
 }
 
 function setupSideMenu() {
@@ -678,6 +678,11 @@ function setupSideMenu() {
   elements.floatingMenuBtn.addEventListener("click", openSideMenu);
   elements.openResultsBtn.addEventListener("click", openSideMenu);
   elements.closeMenuBtn.addEventListener("click", closeSideMenu);
+  elements.menuBackdrop.addEventListener("click", closeSideMenu);
+
+  elements.sideMenu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", closeSideMenu);
+  });
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
