@@ -36,29 +36,7 @@ const GAME_CONFIG = {
   ]
 };
 
-const previousResults = [
-  {
-    date: "2026-07-04",
-    round: "Round 1",
-    glowNumber: 7,
-    glowBall: 12,
-    timestamp: "12:08 PM"
-  },
-  {
-    date: "2026-07-04",
-    round: "Round 2",
-    glowNumber: 19,
-    glowBall: 4,
-    timestamp: "3:26 PM"
-  },
-  {
-    date: "2026-07-03",
-    round: "Round 3",
-    glowNumber: 12,
-    glowBall: 17,
-    timestamp: "8:42 PM"
-  }
-];
+let previousResults = [];
 
 const elements = {
   sideMenu: document.getElementById("sideMenu"),
@@ -238,7 +216,10 @@ function updateLivePanel() {
   elements.cutoffStatus.textContent = phase.statusText;
   elements.liveStatusPill.textContent = phase.pillText;
 
-  const isClosed = phase.phase === "cutoff" || phase.phase === "live" || phase.phase === "finished";
+  const isClosed =
+    phase.phase === "cutoff" ||
+    phase.phase === "live" ||
+    phase.phase === "finished";
 
   elements.cutoffBox.classList.toggle("closed", isClosed);
   elements.liveStatusPill.classList.toggle("closed", isClosed);
@@ -276,13 +257,33 @@ function buildTodayResults() {
   elements.todayResults.innerHTML = cards.join("");
 }
 
+async function loadPreviousResults() {
+  try {
+    const response = await fetch("data/results.json", {
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error("Could not load previous results.");
+    }
+
+    previousResults = await response.json();
+  } catch (error) {
+    previousResults = [];
+    console.warn("Glow 23 previous results failed to load:", error);
+  }
+}
+
+function getAvailableTodayResults() {
+  return GAME_CONFIG.rounds
+    .filter((round) => new Date() >= createRoundDate(round, "start"))
+    .map(getDemoResultForRound);
+}
+
 function renderSearchResults(searchTerm = "") {
   const cleanSearch = searchTerm.trim().toLowerCase();
 
-  const todaysAvailableResults = GAME_CONFIG.rounds
-    .filter((round) => new Date() >= createRoundDate(round, "start"))
-    .map(getDemoResultForRound);
-
+  const todaysAvailableResults = getAvailableTodayResults();
   const allResults = [...todaysAvailableResults, ...previousResults];
 
   const filteredResults = allResults.filter((result) => {
@@ -317,9 +318,11 @@ function renderSearchResults(searchTerm = "") {
 }
 
 function previewChamberReveal() {
-  const randomGlowNumber = Math.floor(
-    Math.random() * (GAME_CONFIG.glowNumberMax - GAME_CONFIG.glowNumberMin + 1)
-  ) + GAME_CONFIG.glowNumberMin;
+  const randomGlowNumber =
+    Math.floor(
+      Math.random() *
+        (GAME_CONFIG.glowNumberMax - GAME_CONFIG.glowNumberMin + 1)
+    ) + GAME_CONFIG.glowNumberMin;
 
   elements.winnerBall.textContent = randomGlowNumber;
   elements.winnerBall.classList.remove("pop");
@@ -360,11 +363,15 @@ function startClock() {
   setInterval(() => {
     updateLivePanel();
     buildTodayResults();
+    renderSearchResults(elements.resultSearch.value);
   }, 1000);
 }
 
-function initGlow23() {
+async function initGlow23() {
   setupSideMenu();
+
+  await loadPreviousResults();
+
   setupSearch();
 
   elements.previewDrawBtn.addEventListener("click", previewChamberReveal);
