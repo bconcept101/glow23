@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Glow 23 Live</title>
+
+  <meta
+    name="description"
+    content="Glow 23 live entertainment number game interface with daily rounds, live chamber reveal, Glow Number results, Glow Ball results, and previous result history."
+  />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="page-shell">
+
+    <!-- SIDE MENU -->
+    <aside class="side-menu" id="sideMenu">
+      <div class="side-menu-header">
+        <h2>Glow 23</h2>
+        <button class="close-menu-btn" id="closeMenuBtn" aria-label="Close menu">×</button>
+      </div>
+
+      <nav class="menu-links">
+        <a href="#live">Live Game</a>
+        <a href="#today-results">Today’s Results</a>
+        <a href="#previous-results">Previous Results</a>
+        <a href="#rules">Game Rules</a>
+      </nav>
+
+      <section class="previous-search" id="previous-results">
+        <h3>Search Previous Results</h3>
+
+        <label for="resultSearch">Search by date, round, or number</label>
+        <input
+          type="text"
+          id="resultSearch"
+          placeholder="Example: Round 1, 7, 2026-07-04"
+        />
+
+        <div class="search-results" id="searchResults">
+          <p class="empty-note">Previous results will appear here.</p>
+        </div>
+      </section>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- HEADER -->
+      <header class="top-header">
+        <button class="menu-btn" id="openMenuBtn" aria-label="Open menu">☰</button>
+
+        <div class="brand-block">
+          <p class="eyebrow">Telegram Entertainment Game</p>
+          <h1>Glow 23 Live</h1>
+          <p class="tagline">Watch the chamber. Follow the rounds. See the Glow.</p>
+        </div>
+
+        <div class="live-pill" id="liveStatusPill">
+          Checking Status
+        </div>
+      </header>
+
+      <!-- LIVE GAME SECTION -->
+      <section class="live-section" id="live">
+
+        <div class="round-info-panel">
+          <p class="section-label">Current Round</p>
+          <h2 id="currentRoundName">Loading Round</h2>
+          <p id="currentRoundWindow">Checking today’s schedule...</p>
+
+          <div class="countdown-box">
+            <span class="countdown-label">Next Phase In</span>
+            <strong id="countdownTimer">--:--:--</strong>
+          </div>
+
+          <div class="cutoff-box" id="cutoffBox">
+            <span>Star Placement Status</span>
+            <strong id="cutoffStatus">Checking...</strong>
+          </div>
+        </div>
+
+        <!-- 3D CHAMBER -->
+        <div class="chamber-stage">
+
+          <div class="winner-display">
+            <p>Drawn Ball</p>
+            <div class="winner-ball" id="winnerBall">?</div>
+          </div>
+
+          <div class="chamber-machine">
+            <div class="glass-shine"></div>
+
+            <div class="ball ball-1">1</div>
+            <div class="ball ball-2">7</div>
+            <div class="ball ball-3">12</div>
+            <div class="ball ball-4">19</div>
+            <div class="ball ball-5">23</div>
+            <div class="ball ball-6">5</div>
+            <div class="ball ball-7">14</div>
+            <div class="ball ball-8">20</div>
+
+            <div class="machine-core">
+              <span>GLOW</span>
+              <strong>23</strong>
+            </div>
+          </div>
+
+          <div class="draw-actions">
+            <button class="primary-btn" id="previewDrawBtn">
+              Preview Chamber Reveal
+            </button>
+            <p class="small-note">
+              Final production results should later be controlled from a secure backend.
+            </p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- TODAY RESULTS -->
+      <section class="results-section" id="today-results">
+        <div class="section-heading">
+          <p class="section-label">Daily History</p>
+          <h2>Today’s Results</h2>
+          <p>Previous rounds stay visible with timestamps.</p>
+        </div>
+
+        <div class="results-grid" id="todayResults">
+          <article class="result-card pending">
+            <span>Round 1</span>
+            <strong>Pending</strong>
+            <p>12:00 PM – 1:00 PM</p>
+          </article>
+
+          <article class="result-card pending">
+            <span>Round 2</span>
+            <strong>Pending</strong>
+            <p>3:00 PM – 5:00 PM</p>
+          </article>
+
+          <article class="result-card pending">
+            <span>Round 3</span>
+            <strong>Pending</strong>
+            <p>7:00 PM – 10:00 PM</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- RULES -->
+      <section class="rules-section" id="rules">
+        <div class="section-heading">
+          <p class="section-label">Locked Setup</p>
+          <h2>Glow 23 Rules</h2>
+        </div>
+
+        <div class="rules-grid">
+          <article>
+            <h3>Glow Number</h3>
+            <p>Members choose Glow Numbers from 1 through 23.</p>
+          </article>
+
+          <article>
+            <h3>Glow Ball</h3>
+            <p>The Glow Ball bonus number runs from 1 through 20.</p>
+          </article>
+
+          <article>
+            <h3>Daily Rounds</h3>
+            <p>Glow 23 runs three daily rounds with live reveal windows.</p>
+          </article>
+
+          <article>
+            <h3>Cutoff</h3>
+            <p>Star placements close before the round reveal window begins.</p>
+          </article>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        <p>Glow 23 is an entertainment number game interface for community use.</p>
+      </footer>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
