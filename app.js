@@ -10,7 +10,8 @@ const GAME_CONFIG = {
     {
       id: 1,
       name: "Round 1",
-      windowLabel: "12:00 PM – 1:00 PM",
+      drawTimeLabel: "12:00 PM",
+      cutoffTimeLabel: "11:50 AM",
       startHour: 12,
       startMinute: 0,
       endHour: 13,
@@ -19,7 +20,8 @@ const GAME_CONFIG = {
     {
       id: 2,
       name: "Round 2",
-      windowLabel: "3:00 PM – 5:00 PM",
+      drawTimeLabel: "3:00 PM",
+      cutoffTimeLabel: "2:50 PM",
       startHour: 15,
       startMinute: 0,
       endHour: 17,
@@ -28,7 +30,8 @@ const GAME_CONFIG = {
     {
       id: 3,
       name: "Round 3",
-      windowLabel: "7:00 PM – 10:00 PM",
+      drawTimeLabel: "7:00 PM",
+      cutoffTimeLabel: "6:50 PM",
       startHour: 19,
       startMinute: 0,
       endHour: 22,
@@ -52,6 +55,8 @@ const elements = {
   liveStatusPill: document.getElementById("liveStatusPill"),
   currentRoundName: document.getElementById("currentRoundName"),
   currentRoundWindow: document.getElementById("currentRoundWindow"),
+  currentDrawTime: document.getElementById("currentDrawTime"),
+  currentCutoffTime: document.getElementById("currentCutoffTime"),
   countdownTimer: document.getElementById("countdownTimer"),
   cutoffBox: document.getElementById("cutoffBox"),
   cutoffStatus: document.getElementById("cutoffStatus"),
@@ -136,6 +141,8 @@ function getResultForRound(round) {
   return {
     date: todayKey,
     round: round.name,
+    drawTime: round.drawTimeLabel,
+    cutoffTime: round.cutoffTimeLabel,
     glowNumber: seededNumber(
       `${todayKey}-${round.id}-glow-number`,
       GAME_CONFIG.glowNumberMin,
@@ -146,7 +153,7 @@ function getResultForRound(round) {
       GAME_CONFIG.glowBallMin,
       GAME_CONFIG.glowBallMax
     ),
-    timestamp: formatDisplayTime(createRoundDate(round, "start"))
+    timestamp: round.drawTimeLabel
   };
 }
 
@@ -179,7 +186,7 @@ function getCurrentPhase() {
         statusText: "Entries Closed",
         pillText: "Closed",
         targetDate: startDate,
-        countdownLabel: "Reveal starts in"
+        countdownLabel: "Draw starts in"
       };
     }
 
@@ -188,10 +195,10 @@ function getCurrentPhase() {
         round,
         phase: "live",
         title: `${round.name} Live`,
-        statusText: "Round Live",
+        statusText: "Draw Live",
         pillText: "Live",
         targetDate: endDate,
-        countdownLabel: "Round ends in"
+        countdownLabel: "Draw window ends in"
       };
     }
   }
@@ -212,7 +219,7 @@ function getCurrentPhase() {
     statusText: "Closed Until Tomorrow",
     pillText: "Complete",
     targetDate: tomorrow,
-    countdownLabel: "Next day opens in"
+    countdownLabel: "Next entry cutoff begins in"
   };
 }
 
@@ -234,7 +241,9 @@ function updateLivePanel() {
   const phase = getCurrentPhase();
 
   elements.currentRoundName.textContent = phase.title;
-  elements.currentRoundWindow.textContent = `${phase.round.windowLabel} • ${phase.countdownLabel}`;
+  elements.currentRoundWindow.textContent = `Draw time: ${phase.round.drawTimeLabel} • ${phase.countdownLabel}`;
+  elements.currentDrawTime.textContent = phase.round.drawTimeLabel;
+  elements.currentCutoffTime.textContent = phase.round.cutoffTimeLabel;
   elements.countdownTimer.textContent = getCountdownText(phase.targetDate);
   elements.cutoffStatus.textContent = phase.statusText;
   elements.liveStatusPill.textContent = phase.pillText;
@@ -312,7 +321,7 @@ function startRevealSequence(round) {
 
   elements.drawStatus.innerHTML = `
     <strong>Drawing Now</strong>
-    <span>Balls are moving. Glow Number reveal in progress.</span>
+    <span>The chamber is active. Glow Number reveal in progress.</span>
   `;
 
   revealState.timer = setTimeout(() => {
@@ -326,7 +335,7 @@ function updateRevealDisplay() {
   if (phase.phase === "open") {
     setWaitingDisplay(
       "Waiting for reveal",
-      "The Glow Number will appear when the round opens."
+      `Next draw starts at ${phase.round.drawTimeLabel}. Entries close at ${phase.round.cutoffTimeLabel}.`
     );
     return;
   }
@@ -334,7 +343,7 @@ function updateRevealDisplay() {
   if (phase.phase === "cutoff") {
     setWaitingDisplay(
       "Entries closed",
-      "The chamber is preparing for the next reveal."
+      `The chamber is preparing for the ${phase.round.drawTimeLabel} draw.`
     );
     return;
   }
@@ -349,8 +358,8 @@ function updateRevealDisplay() {
 
     if (!latestRound) {
       setWaitingDisplay(
-        "Waiting for first round",
-        "The first Glow Number will appear after Round 1 opens."
+        "Waiting for first draw",
+        "The first Glow Number will appear at 12:00 PM."
       );
       return;
     }
@@ -371,7 +380,8 @@ function buildTodayResults() {
         <article class="result-card pending">
           <span>${round.name}</span>
           <strong>Pending</strong>
-          <p>${round.windowLabel}</p>
+          <p>Draw time: ${round.drawTimeLabel}</p>
+          <p>Entries close: ${round.cutoffTimeLabel}</p>
         </article>
       `;
     }
@@ -383,7 +393,7 @@ function buildTodayResults() {
         <span>${round.name}</span>
         <strong>Glow ${result.glowNumber}</strong>
         <p>Glow Ball: ${result.glowBall}</p>
-        <p>Timestamp: ${result.timestamp}</p>
+        <p>Draw time: ${result.timestamp}</p>
       </article>
     `;
   });
@@ -424,6 +434,8 @@ function renderSearchResults(searchTerm = "") {
     const searchableText = `
       ${result.date}
       ${result.round}
+      ${result.drawTime || ""}
+      ${result.cutoffTime || ""}
       ${result.glowNumber}
       ${result.glowBall}
       ${result.timestamp}
@@ -444,7 +456,7 @@ function renderSearchResults(searchTerm = "") {
           <span>${result.date} • ${result.round}</span>
           <p><strong>Glow Number:</strong> ${result.glowNumber}</p>
           <p><strong>Glow Ball:</strong> ${result.glowBall}</p>
-          <p><strong>Timestamp:</strong> ${result.timestamp}</p>
+          <p><strong>Draw Time:</strong> ${result.timestamp}</p>
         </article>
       `;
     })
