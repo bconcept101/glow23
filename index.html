@@ -8,13 +8,18 @@
 
   <meta
     name="description"
-    content="Glow 23 live entertainment number game interface with daily rounds, live chamber reveal, Glow Number results, Glow Ball results, and previous result history."
+    content="Glow 23 live community entertainment number game interface with daily draws, Glow Number reveal, Glow Ball reveal, results, and previous result history."
   />
 
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
+  <!-- FLOATING MENU BUTTON -->
+  <button class="floating-menu-btn" id="floatingMenuBtn" aria-label="Open previous results menu">
+    ☰ Results
+  </button>
+
   <div class="page-shell">
 
     <!-- SIDE MENU -->
@@ -25,16 +30,16 @@
       </div>
 
       <nav class="menu-links">
-        <a href="#live">Live Game</a>
+        <a href="#live">Live Draw</a>
         <a href="#today-results">Today’s Results</a>
-        <a href="#previous-results">Previous Results</a>
+        <a href="#yesterday-results">Yesterday’s Results</a>
         <a href="#rules">Game Rules</a>
       </nav>
 
       <section class="previous-search" id="previous-results">
-        <h3>Search Previous Results</h3>
+        <h3>Past Results Search</h3>
 
-        <label for="resultSearch">Search by date, round, or number</label>
+        <label for="resultSearch">Search by date, round, Glow Number, or Glow Ball</label>
         <input
           type="text"
           id="resultSearch"
@@ -42,7 +47,7 @@
         />
 
         <div class="search-results" id="searchResults">
-          <p class="empty-note">Previous results will appear here.</p>
+          <p class="empty-note">Past results will appear here.</p>
         </div>
       </section>
     </aside>
@@ -55,12 +60,20 @@
         <button class="menu-btn" id="openMenuBtn" aria-label="Open menu">☰</button>
 
         <div class="brand-block">
-          <p class="eyebrow">Telegram Entertainment Game</p>
+          <p class="eyebrow">Community Entertainment Game</p>
           <h1>Glow 23 Live</h1>
           <p class="tagline">Watch the chamber. Follow the draw. See the Glow.</p>
         </div>
 
-        <div class="live-pill" id="liveStatusPill">
+        <nav class="top-nav" aria-label="Main navigation">
+          <a href="#live">Live Draw</a>
+          <a href="#today-results">Today</a>
+          <a href="#yesterday-results">Yesterday</a>
+          <button type="button" id="openResultsBtn">Past Results</button>
+          <a href="#rules">Rules</a>
+        </nav>
+
+        <div class="header-status-pill" id="headerStatusPill">
           Checking Status
         </div>
       </header>
@@ -68,9 +81,10 @@
       <!-- LIVE GAME SECTION -->
       <section class="live-section" id="live">
 
+        <!-- LEFT STATUS PANEL -->
         <div class="round-info-panel">
-          <p class="section-label">Current Round</p>
-          <h2 id="currentRoundName">Loading Round</h2>
+          <p class="section-label">Current Draw</p>
+          <h2 id="currentRoundName">Loading Draw</h2>
           <p id="currentRoundWindow">Checking today’s schedule...</p>
 
           <div class="countdown-box">
@@ -83,6 +97,34 @@
             <strong id="cutoffStatus">Checking...</strong>
           </div>
 
+          <!-- OFFICIAL RESULT CARD -->
+          <div class="official-result-card" id="officialResultCard">
+            <p class="draw-info-label">Official Result</p>
+
+            <div class="official-result-main">
+              <div>
+                <span>Glow Number</span>
+                <strong id="officialGlowNumber">--</strong>
+              </div>
+
+              <div>
+                <span>Glow Ball</span>
+                <strong id="officialGlowBall">--</strong>
+              </div>
+            </div>
+
+            <div class="draw-info-row">
+              <span>Date</span>
+              <strong id="officialResultDate">--</strong>
+            </div>
+
+            <div class="draw-info-row">
+              <span>Draw Time</span>
+              <strong id="officialResultTime">--</strong>
+            </div>
+          </div>
+
+          <!-- DRAW DETAILS -->
           <div class="draw-info-card">
             <p class="draw-info-label">Draw Details</p>
 
@@ -108,14 +150,23 @@
           </div>
         </div>
 
-        <!-- 3D CHAMBER -->
+        <!-- RIGHT CHAMBER PANEL -->
         <div class="chamber-stage">
 
-          <div class="winner-display">
-            <p>Glow Number Reveal</p>
-            <div class="winner-ball waiting" id="winnerBall">?</div>
+          <!-- TWO REVEAL CARDS -->
+          <div class="reveal-card-grid">
+            <div class="winner-display">
+              <p>Glow Number Reveal</p>
+              <div class="winner-ball waiting" id="glowNumberBall">?</div>
+            </div>
+
+            <div class="winner-display bonus-display">
+              <p>Glow Ball Reveal</p>
+              <div class="winner-ball bonus-ball waiting" id="glowBallBall">?</div>
+            </div>
           </div>
 
+          <!-- MAIN CHAMBER -->
           <div class="chamber-machine" id="chamberMachine">
             <div class="glass-shine"></div>
 
@@ -146,7 +197,7 @@
 
           <div class="draw-status" id="drawStatus">
             <strong>Waiting for reveal</strong>
-            <span>The Glow Number will appear when the round opens.</span>
+            <span>The Glow Number and Glow Ball will appear when the draw begins.</span>
           </div>
 
         </div>
@@ -158,13 +209,14 @@
         <div class="section-heading">
           <p class="section-label">Daily History</p>
           <h2>Today’s Results</h2>
-          <p>Previous rounds stay visible with timestamps.</p>
+          <p>Each result includes the date, draw time, Glow Number, and Glow Ball.</p>
         </div>
 
         <div class="results-grid" id="todayResults">
           <article class="result-card pending">
             <span>Round 1</span>
             <strong>Pending</strong>
+            <p>Date: Loading...</p>
             <p>Draw time: 12:00 PM</p>
             <p>Entries close: 11:50 AM</p>
           </article>
@@ -172,6 +224,7 @@
           <article class="result-card pending">
             <span>Round 2</span>
             <strong>Pending</strong>
+            <p>Date: Loading...</p>
             <p>Draw time: 3:00 PM</p>
             <p>Entries close: 2:50 PM</p>
           </article>
@@ -179,8 +232,26 @@
           <article class="result-card pending">
             <span>Round 3</span>
             <strong>Pending</strong>
+            <p>Date: Loading...</p>
             <p>Draw time: 7:00 PM</p>
             <p>Entries close: 6:50 PM</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- YESTERDAY RESULTS -->
+      <section class="results-section yesterday-section" id="yesterday-results">
+        <div class="section-heading">
+          <p class="section-label">Recent History</p>
+          <h2>Yesterday’s Results</h2>
+          <p>Previous day results remain visible for quick review.</p>
+        </div>
+
+        <div class="results-grid" id="yesterdayResults">
+          <article class="result-card pending">
+            <span>Yesterday</span>
+            <strong>Loading</strong>
+            <p>Checking previous results...</p>
           </article>
         </div>
       </section>
@@ -216,7 +287,7 @@
       </section>
 
       <footer class="site-footer">
-        <p>Glow 23 is an entertainment number game interface for community use.</p>
+        <p>Glow 23 is a community entertainment number game interface.</p>
       </footer>
 
     </main>
