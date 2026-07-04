@@ -20,6 +20,9 @@
     ☰ Results
   </button>
 
+  <!-- MENU BACKDROP / SHIELD -->
+  <div class="menu-backdrop" id="menuBackdrop" aria-hidden="true"></div>
+
   <div class="page-shell">
 
     <!-- SIDE MENU -->
@@ -153,20 +156,15 @@
         <!-- RIGHT CHAMBER PANEL -->
         <div class="chamber-stage">
 
-          <!-- STACKED REVEAL CARDS -->
+          <!-- GLOW NUMBER REVEAL CARD -->
           <div class="reveal-stack">
             <div class="winner-display glow-number-display">
               <p>Glow Number Reveal</p>
               <div class="winner-ball waiting" id="glowNumberBall">?</div>
             </div>
-
-            <div class="winner-display bonus-display compact-bonus-display">
-              <p>Glow Ball Reveal</p>
-              <div class="winner-ball bonus-ball waiting" id="glowBallTopBall">?</div>
-            </div>
           </div>
 
-          <!-- MAIN CHAMBER -->
+          <!-- MAIN GLOW NUMBER CHAMBER -->
           <div class="chamber-machine" id="chamberMachine">
             <div class="glass-shine"></div>
 
@@ -200,7 +198,7 @@
             <span>The Glow Number and Glow Ball will appear when the draw begins.</span>
           </div>
 
-          <!-- BONUS CHAMBER SECTION -->
+          <!-- GLOW BALL CHAMBER SECTION -->
           <div class="bonus-chamber-section">
             <p class="bonus-section-title">Glow Ball Chamber</p>
 
@@ -231,7 +229,7 @@
               </div>
 
               <div class="bonus-side-result-card">
-                <p>Glow Ball Side Reveal</p>
+                <p>Glow Ball Result</p>
                 <div class="winner-ball bonus-ball waiting side-bonus-ball" id="glowBallSideBall">?</div>
                 <span id="bonusSideStatus">Glow Ball chamber starts after the Glow Number reveal.</span>
               </div>
